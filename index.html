@@ -1,0 +1,1788 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>十年留学咨询事务所</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d9e2ec;
+      --paper: #f3efe5;
+      --panel: #ffffff;
+      --navy: #1f3a5f;
+      --teal: #0f766e;
+      --coral: #d45d52;
+      --gold: #c58a13;
+      --green: #1f7a4d;
+      --blue: #2563eb;
+      --shadow: 0 14px 34px rgba(23, 32, 51, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(31, 58, 95, 0.045) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(31, 58, 95, 0.035) 1px, transparent 1px),
+        #f4f1ea;
+      background-size: 28px 28px, 28px 28px, auto;
+      background-attachment: fixed;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding: 18px 28px;
+      background: #172033;
+      color: #fff;
+      border-bottom: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin-top: 5px;
+      color: rgba(255,255,255,0.72);
+      font-size: 13px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      border: 1px solid rgba(31, 58, 95, 0.18);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      padding: 9px 13px;
+      min-height: 38px;
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, #315985, var(--navy));
+      color: #fff;
+      border-color: var(--navy);
+      box-shadow: 0 8px 18px rgba(31, 58, 95, 0.26);
+    }
+
+    .btn.gold {
+      background: linear-gradient(180deg, #fff7df, #f3d684);
+      color: #7a5200;
+      border-color: #f1d38a;
+      box-shadow: 0 8px 16px rgba(197, 138, 19, 0.18);
+    }
+
+    body.lobby-mode main,
+    body.lobby-mode #restartBtn,
+    body.lobby-mode #settleBtn,
+    body.lobby-mode #nextBtn {
+      display: none;
+    }
+
+    body.play-mode #lobby {
+      display: none;
+    }
+
+    body.lobby-mode #mapBtn {
+      display: none;
+    }
+
+    #lobby {
+      width: min(1500px, 100%);
+      margin: 0 auto;
+      padding: 22px 28px 34px;
+      display: grid;
+      grid-template-columns: 300px 1fr 350px;
+      gap: 18px;
+    }
+
+    .lobby-hero {
+      background: linear-gradient(180deg, #fffdf6, #ffffff);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 18px 38px rgba(23, 32, 51, 0.16);
+    }
+
+    .lobby-hero h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .lobby-hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 13px;
+    }
+
+    .badge-wall {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .badge {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border-radius: 8px;
+      padding: 10px;
+      background: #fffdf6;
+      border: 1px solid #d9e2ec;
+      font-size: 12px;
+      color: #344054;
+    }
+
+    .badge b {
+      color: var(--navy);
+      font-size: 14px;
+    }
+
+    .level-map {
+      background: linear-gradient(180deg, #fffdf8, #ffffff);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 16px 36px rgba(23, 32, 51, 0.13);
+    }
+
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .level-card {
+      position: relative;
+      text-align: left;
+      min-height: 150px;
+      border: 1px solid #c2ceda;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.92), rgba(248,250,252,0.98)),
+        linear-gradient(90deg, rgba(197,138,19,0.12), transparent);
+      padding: 13px;
+      display: grid;
+      align-content: space-between;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .level-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 30px rgba(31, 58, 95, 0.18);
+      border-color: var(--teal);
+    }
+
+    .level-card.active {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.16), 0 18px 34px rgba(15, 118, 110, 0.18);
+    }
+
+    .level-card.done {
+      background: linear-gradient(180deg, #fff7df, #ffffff);
+      border-color: #e7c36c;
+    }
+
+    .level-year {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .level-year-number {
+      color: var(--navy);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .level-card h3 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .level-card p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .stamp {
+      min-width: 34px;
+      height: 26px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: #94a3b8;
+      font-weight: 900;
+      font-size: 12px;
+      padding: 0 8px;
+      box-shadow: inset 0 -4px 0 rgba(0,0,0,0.10);
+    }
+
+    .stamp.s { background: var(--teal); }
+    .stamp.a { background: var(--blue); }
+    .stamp.b { background: var(--gold); }
+    .stamp.c { background: var(--coral); }
+
+    .level-detail {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(23, 32, 51, 0.06);
+      align-self: start;
+    }
+
+    .level-detail h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .rule-box {
+      border-radius: 8px;
+      border: 1px solid #d9e2ec;
+      background: #fbfdff;
+      padding: 12px;
+      margin-top: 12px;
+    }
+
+    .rule-box h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+
+    .rule-box ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 13px;
+    }
+
+    .reward-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .reward-chip {
+      border-radius: 8px;
+      background: #fff7df;
+      color: #7a5200;
+      padding: 9px;
+      font-size: 12px;
+      border: 1px solid #f1d38a;
+      font-weight: 800;
+    }
+
+    main {
+      width: min(1500px, 100%);
+      margin: 0 auto;
+      padding: 22px 28px 34px;
+      display: grid;
+      grid-template-columns: 330px 1fr 330px;
+      gap: 18px;
+    }
+
+    .panel, .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(23, 32, 51, 0.06);
+    }
+
+    .panel {
+      padding: 16px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .section-title {
+      margin: 0 0 12px;
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: #eef6f5;
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .office-visual {
+      height: 126px;
+      margin-bottom: 14px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #cbd6e2;
+      background: #eaf2f7;
+    }
+
+    .office-visual svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fbfdff;
+      min-height: 72px;
+    }
+
+    .metric label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .metric strong {
+      font-size: 23px;
+      line-height: 1;
+    }
+
+    .progress {
+      height: 8px;
+      border-radius: 999px;
+      background: #edf2f7;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: var(--teal);
+      transition: width 260ms ease;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(11, 1fr);
+      gap: 4px;
+      margin-top: 14px;
+    }
+
+    .year-dot {
+      height: 28px;
+      border-radius: 6px;
+      background: #eef2f6;
+      color: #536176;
+      font-size: 11px;
+      display: grid;
+      place-items: center;
+      border: 1px solid transparent;
+      padding: 0;
+    }
+
+    .year-dot.active {
+      background: #e8f5f2;
+      border-color: var(--teal);
+      color: var(--teal);
+      font-weight: 800;
+    }
+
+    .mission {
+      margin-top: 14px;
+      border: 1px solid #d9e2ec;
+      border-radius: 8px;
+      background: #fbfdff;
+      padding: 12px;
+    }
+
+    .mission h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+
+    .mission p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .mission-list {
+      display: grid;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .mission-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      border-radius: 6px;
+      background: #f1f5f9;
+      padding: 7px 8px;
+      font-size: 12px;
+      color: #344054;
+    }
+
+    .mission-item.done {
+      background: #e7f6ee;
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .client-card {
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 15px;
+      border: 1px solid #bccadd;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, #ffffff, #f7f1df),
+        linear-gradient(90deg, rgba(31,58,95,0.10), transparent);
+      margin-bottom: 14px;
+      box-shadow: inset 5px 0 0 rgba(197, 138, 19, 0.42);
+    }
+
+    .avatar {
+      width: 76px;
+      height: 76px;
+      border-radius: 18px;
+      background: #eaf0f7;
+      border: 1px solid #cbd6e2;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .avatar svg {
+      width: 70px;
+      height: 70px;
+    }
+
+    .client-card h2 {
+      margin: 0 0 4px;
+      font-size: 20px;
+    }
+
+    .client-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 13px;
+    }
+
+    .need-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .need {
+      border: 1px solid #c7d2df;
+      border-radius: 8px;
+      background: #fffdf8;
+      padding: 10px;
+    }
+
+    .need span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .need b {
+      font-size: 15px;
+    }
+
+    .country-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .country-card {
+      text-align: left;
+      border: 1px solid #bfcbd8;
+      border-radius: 8px;
+      padding: 12px;
+      background:
+        linear-gradient(180deg, #ffffff, #f8fafc),
+        linear-gradient(135deg, rgba(31,58,95,0.08), transparent);
+      min-height: 178px;
+      min-width: 0;
+      box-shadow: inset 0 5px 0 rgba(31, 58, 95, 0.08);
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .country-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 28px rgba(23, 32, 51, 0.16);
+      border-color: var(--teal);
+    }
+
+    .country-card.selected {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.18), 0 18px 30px rgba(15, 118, 110, 0.18);
+      background: linear-gradient(180deg, #f0fbf8, #ffffff);
+    }
+
+    .country-card:disabled {
+      cursor: default;
+      opacity: 0.78;
+      transform: none;
+    }
+
+    .country-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 11px;
+    }
+
+    .country-head strong {
+      font-size: 17px;
+    }
+
+    .rank-badge {
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .clue {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+      margin-top: 8px;
+      color: var(--muted);
+    }
+
+    .pill {
+      justify-self: end;
+      border-radius: 999px;
+      padding: 3px 7px;
+      background: #eef2f7;
+      color: #344054;
+      font-weight: 800;
+    }
+
+    .pill.good { background: #e7f6ee; color: var(--green); }
+    .pill.mid { background: #fff7df; color: var(--gold); }
+    .pill.bad { background: #fdecea; color: var(--coral); }
+
+    .feedback {
+      min-height: 238px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .feedback.success {
+      animation: successPulse 520ms ease both;
+    }
+
+    .feedback.fail {
+      animation: failShake 420ms ease both;
+    }
+
+    .outcome-banner {
+      border-radius: 8px;
+      padding: 13px;
+      display: grid;
+      gap: 7px;
+      border: 1px solid;
+      box-shadow: 0 12px 28px rgba(23, 32, 51, 0.12);
+    }
+
+    .outcome-banner.success {
+      background: linear-gradient(135deg, #e7f6ee, #ffffff);
+      border-color: #90d4ae;
+      color: #14532d;
+    }
+
+    .outcome-banner.fail {
+      background: linear-gradient(135deg, #fdecea, #ffffff);
+      border-color: #f0aaa2;
+      color: #7f1d1d;
+    }
+
+    .outcome-banner b {
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    .outcome-banner span {
+      font-size: 12px;
+      color: inherit;
+      opacity: 0.82;
+    }
+
+    .empty {
+      color: var(--muted);
+      line-height: 1.7;
+      background: #f8fafc;
+      border: 1px dashed #cdd8e4;
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .grade {
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .grade-mark {
+      height: 82px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 36px;
+      font-weight: 900;
+      color: #fff;
+      background: var(--teal);
+      box-shadow: inset 0 -8px 0 rgba(0,0,0,0.08), 0 12px 20px rgba(15, 118, 110, 0.22);
+    }
+
+    .grade-mark.success {
+      animation: stampPop 420ms ease both;
+    }
+
+    .grade-mark.fail {
+      animation: stampPop 420ms ease both;
+      box-shadow: inset 0 -8px 0 rgba(0,0,0,0.08), 0 12px 20px rgba(212, 93, 82, 0.22);
+    }
+
+    .grade h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    .grade p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .score-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .score-row {
+      display: grid;
+      grid-template-columns: 78px 1fr 44px;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .score-track {
+      height: 8px;
+      border-radius: 999px;
+      background: #edf2f7;
+      overflow: hidden;
+    }
+
+    .score-fill {
+      height: 100%;
+      background: var(--blue);
+    }
+
+    .log {
+      display: grid;
+      gap: 8px;
+      max-height: 270px;
+      overflow: auto;
+      padding-right: 3px;
+    }
+
+    .log-item {
+      border-left: 3px solid var(--teal);
+      background: #f8fafc;
+      padding: 8px 10px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #344054;
+    }
+
+    .reward {
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #fff7df;
+      color: #7a5200;
+      font-size: 13px;
+      line-height: 1.55;
+      border: 1px solid #f1d38a;
+    }
+
+    .reward.success {
+      background: #e7f6ee;
+      color: #14532d;
+      border-color: #90d4ae;
+    }
+
+    .reward.fail {
+      background: #fdecea;
+      color: #7f1d1d;
+      border-color: #f0aaa2;
+    }
+
+    .result-toast {
+      position: fixed;
+      top: 92px;
+      left: 50%;
+      transform: translate(-50%, -20px);
+      z-index: 80;
+      opacity: 0;
+      pointer-events: none;
+      border-radius: 8px;
+      padding: 13px 18px;
+      color: #fff;
+      font-weight: 900;
+      box-shadow: var(--shadow);
+      min-width: 260px;
+      text-align: center;
+    }
+
+    .result-toast.show {
+      animation: toastIn 1200ms ease both;
+    }
+
+    .result-toast.success { background: var(--teal); }
+    .result-toast.fail { background: var(--coral); }
+
+    body.outcome-success::after,
+    body.outcome-fail::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 70;
+      animation: screenFlash 520ms ease both;
+    }
+
+    body.outcome-success::after { background: rgba(15, 118, 110, 0.13); }
+    body.outcome-fail::after { background: rgba(212, 93, 82, 0.14); }
+
+    @keyframes stampPop {
+      0% { transform: scale(0.72) rotate(-6deg); opacity: 0; }
+      70% { transform: scale(1.08) rotate(2deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0); opacity: 1; }
+    }
+
+    @keyframes toastIn {
+      0% { opacity: 0; transform: translate(-50%, -18px) scale(0.96); }
+      14% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+      82% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -14px) scale(0.98); }
+    }
+
+    @keyframes successPulse {
+      0% { transform: scale(0.99); }
+      60% { transform: scale(1.015); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes failShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      55% { transform: translateX(5px); }
+      80% { transform: translateX(-2px); }
+    }
+
+    @keyframes screenFlash {
+      0% { opacity: 0; }
+      30% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .report {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(23, 32, 51, 0.55);
+      z-index: 40;
+      padding: 24px;
+      overflow: auto;
+    }
+
+    .report.open {
+      display: grid;
+      place-items: center;
+    }
+
+    .report-inner {
+      width: min(980px, 100%);
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .report-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+    }
+
+    .report-head h2 {
+      margin: 0 0 6px;
+      font-size: 26px;
+    }
+
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .achievement {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 13px;
+      background: #fbfdff;
+    }
+
+    .achievement span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .achievement b {
+      display: block;
+      margin-top: 7px;
+      font-size: 20px;
+    }
+
+    .chart {
+      width: 100%;
+      min-height: 180px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 10px;
+    }
+
+    @media (max-width: 1180px) {
+      main { grid-template-columns: 300px 1fr; }
+      .right-col { grid-column: 1 / -1; }
+      .country-grid { grid-template-columns: repeat(3, minmax(150px, 1fr)); }
+      #lobby { grid-template-columns: 280px 1fr; }
+      .level-detail { grid-column: 1 / -1; }
+      .level-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      header { grid-template-columns: 1fr; padding: 16px; }
+      main { grid-template-columns: 1fr; padding: 16px; }
+      #lobby { grid-template-columns: 1fr; padding: 16px; }
+      .country-grid, .need-grid, .report-grid, .level-grid { grid-template-columns: 1fr; }
+      .top-actions { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body class="lobby-mode">
+  <div class="result-toast" id="resultToast"></div>
+  <div class="app">
+    <header>
+      <div>
+        <h1>十年留学咨询事务所</h1>
+        <div class="subtitle">选择年度关卡，挑战真实留学市场变化</div>
+      </div>
+      <div class="top-actions">
+        <button class="btn" id="mapBtn">关卡地图</button>
+        <button class="btn" id="restartBtn">重开本年</button>
+        <button class="btn gold" id="settleBtn">年度结算</button>
+        <button class="btn primary" id="nextBtn">提交方案</button>
+      </div>
+    </header>
+
+    <section id="lobby">
+      <aside class="lobby-hero">
+        <div class="office-visual" aria-hidden="true">
+          <svg viewBox="0 0 660 250" role="img">
+            <rect width="660" height="250" fill="#dbeafe"/>
+            <rect x="0" y="176" width="660" height="74" fill="#f8fafc"/>
+            <rect x="52" y="78" width="110" height="100" rx="8" fill="#1f3a5f"/>
+            <rect x="204" y="46" width="90" height="132" rx="8" fill="#0f766e"/>
+            <rect x="336" y="92" width="120" height="86" rx="8" fill="#d45d52"/>
+            <rect x="500" y="64" width="118" height="114" rx="8" fill="#334155"/>
+            <path d="M42 205 C150 150, 254 226, 355 190 S520 166, 630 204" fill="none" stroke="#c58a13" stroke-width="9" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h2>事务所大厅</h2>
+        <p>每一年都是一个经营关卡。完成 5 单咨询，争取年度评级、徽章和数据图表解锁。</p>
+        <div class="badge-wall" id="lobbyStats"></div>
+      </aside>
+
+      <section class="level-map">
+        <h2 class="section-title">十年关卡地图 <span class="tag">2016-2026</span></h2>
+        <div class="level-grid" id="levelGrid"></div>
+      </section>
+
+      <aside class="level-detail" id="levelDetail"></aside>
+    </section>
+
+    <main id="gameMain">
+      <aside class="panel">
+        <div class="office-visual" aria-hidden="true">
+          <svg viewBox="0 0 660 250" role="img">
+            <defs>
+              <linearGradient id="sky" x1="0" x2="1">
+                <stop offset="0" stop-color="#dbeafe"/>
+                <stop offset="1" stop-color="#ccfbf1"/>
+              </linearGradient>
+            </defs>
+            <rect width="660" height="250" fill="url(#sky)"/>
+            <rect x="0" y="176" width="660" height="74" fill="#f8fafc"/>
+            <rect x="42" y="78" width="114" height="100" rx="8" fill="#1f3a5f"/>
+            <rect x="185" y="46" width="86" height="132" rx="8" fill="#0f766e"/>
+            <rect x="302" y="92" width="120" height="86" rx="8" fill="#d45d52"/>
+            <rect x="458" y="64" width="118" height="114" rx="8" fill="#334155"/>
+            <g fill="#ffffff" opacity=".82">
+              <rect x="58" y="96" width="18" height="18" rx="3"/><rect x="88" y="96" width="18" height="18" rx="3"/><rect x="118" y="96" width="18" height="18" rx="3"/>
+              <rect x="58" y="128" width="18" height="18" rx="3"/><rect x="88" y="128" width="18" height="18" rx="3"/><rect x="118" y="128" width="18" height="18" rx="3"/>
+              <rect x="202" y="66" width="18" height="18" rx="3"/><rect x="235" y="66" width="18" height="18" rx="3"/><rect x="202" y="100" width="18" height="18" rx="3"/><rect x="235" y="100" width="18" height="18" rx="3"/><rect x="202" y="134" width="18" height="18" rx="3"/><rect x="235" y="134" width="18" height="18" rx="3"/>
+              <rect x="326" y="112" width="25" height="20" rx="3"/><rect x="372" y="112" width="25" height="20" rx="3"/><rect x="326" y="144" width="25" height="20" rx="3"/><rect x="372" y="144" width="25" height="20" rx="3"/>
+              <rect x="480" y="86" width="22" height="18" rx="3"/><rect x="520" y="86" width="22" height="18" rx="3"/><rect x="480" y="124" width="22" height="18" rx="3"/><rect x="520" y="124" width="22" height="18" rx="3"/>
+            </g>
+            <path d="M36 199 C130 165, 228 230, 326 193 S515 170, 624 204" fill="none" stroke="#c58a13" stroke-width="9" stroke-linecap="round"/>
+            <circle cx="99" cy="199" r="9" fill="#c58a13"/><circle cx="228" cy="211" r="9" fill="#c58a13"/><circle cx="372" cy="190" r="9" fill="#c58a13"/><circle cx="529" cy="188" r="9" fill="#c58a13"/>
+          </svg>
+        </div>
+        <h2 class="section-title">经营状态 <span class="tag" id="yearTag">2016</span></h2>
+        <div class="metrics">
+          <div class="metric">
+            <label>口碑值</label>
+            <strong id="rep">50</strong>
+            <div class="progress"><div class="bar" id="repBar"></div></div>
+          </div>
+          <div class="metric">
+            <label>满意度</label>
+            <strong id="sat">50</strong>
+            <div class="progress"><div class="bar" id="satBar"></div></div>
+          </div>
+          <div class="metric">
+            <label>成功率</label>
+            <strong id="rate">0%</strong>
+            <div class="progress"><div class="bar" id="rateBar"></div></div>
+          </div>
+          <div class="metric">
+            <label>行动力</label>
+            <strong id="energy">5</strong>
+            <div class="progress"><div class="bar" id="levelBar"></div></div>
+          </div>
+          <div class="metric">
+            <label>资金</label>
+            <strong id="money">100</strong>
+            <div class="progress"><div class="bar" id="moneyBar"></div></div>
+          </div>
+          <div class="metric">
+            <label>洞察点</label>
+            <strong id="insight">0</strong>
+            <div class="progress"><div class="bar" id="insightBar"></div></div>
+          </div>
+        </div>
+        <div class="timeline" id="timeline"></div>
+        <div class="mission" id="mission"></div>
+      </aside>
+
+      <section class="panel">
+        <h2 class="section-title">来访学生 <span class="tag" id="caseTag">第 1 位</span></h2>
+        <div class="client-card">
+          <div class="avatar" id="clientAvatar" aria-hidden="true"></div>
+          <div>
+            <h2 id="clientName">学生</h2>
+            <p id="clientStory"></p>
+          </div>
+        </div>
+        <div class="need-grid">
+          <div class="need"><span>主需求</span><b id="clientType"></b></div>
+          <div class="need"><span>专业方向</span><b id="clientMajor"></b></div>
+          <div class="need"><span>预算态度</span><b id="clientBudget"></b></div>
+        </div>
+        <h2 class="section-title">咨询方案卡 <span class="tag" id="weightTag"></span></h2>
+        <div class="country-grid" id="countryGrid"></div>
+      </section>
+
+      <aside class="panel right-col">
+        <h2 class="section-title">客户反馈</h2>
+        <div class="feedback" id="feedback">
+          <div class="empty">等待本轮推荐结果。</div>
+        </div>
+        <h2 class="section-title" style="margin-top:16px;">奖励与事件</h2>
+        <div class="log" id="log"></div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="report" id="report">
+    <div class="report-inner">
+      <div class="report-head">
+        <div>
+          <h2>2026 十年顾问报告</h2>
+          <div class="subtitle" id="reportSubtitle"></div>
+        </div>
+        <button class="btn" id="closeReport">返回地图</button>
+      </div>
+      <div class="report-grid" id="reportGrid"></div>
+      <div class="chart">
+        <svg id="reportChart" viewBox="0 0 900 220" preserveAspectRatio="none"></svg>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const clamp = (v, min = 0, max = 100) => Math.max(min, Math.min(max, v));
+    const fmt = (v) => Math.round(v);
+    const names = ["林同学", "周同学", "陈同学", "王同学", "许同学", "李同学", "何同学", "赵同学", "黄同学", "吴同学"];
+    const clientTypes = [
+      { id: "rank", label: "名校冲刺型", delta: { rank: 0.15, fee: -0.05, major: -0.10 }, budget: "可接受溢价" },
+      { id: "fee", label: "预算敏感型", delta: { rank: -0.05, fee: 0.15, major: -0.10 }, budget: "严格控制成本" },
+      { id: "major", label: "专业匹配型", delta: { rank: -0.05, fee: -0.10, major: 0.15 }, budget: "看重投入产出" },
+      { id: "balanced", label: "综合稳妥型", delta: { rank: 0, fee: 0, major: 0 }, budget: "希望整体均衡" },
+    ];
+    const levelMeta = {
+      2016: { title: "新手开业", rule: "客户目标相对清晰，适合熟悉 QS、学费和专业线索。", reward: "新店开张徽章", chart: "基础趋势图" },
+      2017: { title: "口碑起步", rule: "名校资源开始成为关键卖点，错配会影响满意度。", reward: "口碑种子徽章", chart: "QS 资源图" },
+      2018: { title: "申请旺季", rule: "客户数量和期待同步上升，连续成功会带来转介绍。", reward: "旺季顾问徽章", chart: "热度排名图" },
+      2019: { title: "专业分化", rule: "专业匹配权重提高，热门目的地不一定是最佳答案。", reward: "专业规划师徽章", chart: "专业匹配雷达" },
+      2020: { title: "预算压力", rule: "预算敏感客户增加，高学费目的地需要更强理由。", reward: "预算守门人徽章", chart: "学费压力图" },
+      2021: { title: "线上咨询潮", rule: "客户更看重综合稳妥，单一优势不足以保证转化。", reward: "稳健方案徽章", chart: "综合权重图" },
+      2022: { title: "名校竞争", rule: "名校冲刺客户增多，QS 资源短板会被放大。", reward: "名校猎手徽章", chart: "名校资源图" },
+      2023: { title: "港新升温", rule: "市场热度变化明显，跟风选择会触发额外惩罚。", reward: "逆势判断徽章", chart: "市场热度图" },
+      2024: { title: "高成本挑战", rule: "学费压力更高，预算适配会影响资金收益。", reward: "成本控制徽章", chart: "预算对照图" },
+      2025: { title: "策略转型", rule: "客户更在意个性化方案，专业和预算都不能忽略。", reward: "转型顾问徽章", chart: "因素变化图" },
+      2026: { title: "金牌评定", rule: "最终考核，平均匹配分和成功率都会影响评级。", reward: "金牌顾问徽章", chart: "十年总结图" },
+    };
+    const state = {
+      data: null,
+      screen: "lobby",
+      selectedLevelIndex: 0,
+      levelResults: {},
+      yearIndex: 0,
+      casesPerRun: 5,
+      caseInYear: 0,
+      totalCases: 0,
+      success: 0,
+      reputation: 50,
+      satisfaction: 50,
+      energy: 5,
+      money: 100,
+      insight: 0,
+      streak: 0,
+      selected: null,
+      awaitingNext: false,
+      client: null,
+      caseDeck: [],
+      logs: [],
+      scores: [],
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function setScreen(screen) {
+      state.screen = screen;
+      document.body.classList.toggle("lobby-mode", screen === "lobby");
+      document.body.classList.toggle("play-mode", screen === "play");
+    }
+
+    function levelGradeClass(gradeValue) {
+      return String(gradeValue || "").toLowerCase().slice(0, 1);
+    }
+
+    function renderLobby() {
+      const completed = Object.values(state.levelResults);
+      const sCount = completed.filter((r) => r.grade === "S").length;
+      const totalMoney = completed.reduce((sum, r) => sum + (r.money || 0), 0);
+      const totalBadges = completed.filter((r) => r.badge).length;
+      $("lobbyStats").innerHTML = `
+        <div class="badge"><span>已通关年份</span><b>${completed.length}/11</b></div>
+        <div class="badge"><span>S 级通关</span><b>${sCount}</b></div>
+        <div class="badge"><span>累计资金</span><b>${totalMoney || 0}</b></div>
+        <div class="badge"><span>已解锁徽章</span><b>${totalBadges}</b></div>`;
+
+      $("levelGrid").innerHTML = state.data.years.map((year, index) => {
+        const meta = levelMeta[year];
+        const result = state.levelResults[year];
+        const stamp = result ? result.grade : "未通关";
+        return `
+          <button class="level-card ${index === state.selectedLevelIndex ? "active" : ""} ${result ? "done" : ""}" data-level-index="${index}">
+            <div>
+              <div class="level-year"><span class="level-year-number">${year}</span><span class="stamp ${levelGradeClass(result?.grade)}">${stamp}</span></div>
+              <h3>${meta.title}</h3>
+              <p>${meta.rule}</p>
+            </div>
+          </button>`;
+      }).join("");
+      document.querySelectorAll(".level-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          state.selectedLevelIndex = Number(card.dataset.levelIndex);
+          renderLobby();
+        });
+      });
+      renderLevelDetail();
+    }
+
+    function renderLevelDetail() {
+      const year = state.data.years[state.selectedLevelIndex];
+      const meta = levelMeta[year];
+      const result = state.levelResults[year];
+      $("levelDetail").innerHTML = `
+        <div class="level-year"><span>年度关卡</span><span class="stamp ${levelGradeClass(result?.grade)}">${result ? result.grade : "NEW"}</span></div>
+        <h2>${year} ${meta.title}</h2>
+        <p class="subtitle">${meta.rule}</p>
+        <div class="rule-box">
+          <h3>通关目标</h3>
+          <ul>
+            <li>完成 5 单年度咨询</li>
+            <li>成功咨询至少 3 单</li>
+            <li>资金达到 ${year >= 2023 ? 135 : 125}</li>
+            <li>获得至少 3 点洞察</li>
+          </ul>
+        </div>
+        <div class="reward-row">
+          <div class="reward-chip">奖励：${meta.reward}</div>
+          <div class="reward-chip">解锁：${meta.chart}</div>
+        </div>
+        ${result ? `<div class="rule-box"><h3>上次成绩</h3><ul><li>评级：${result.grade}</li><li>成功率：${result.rate}%</li><li>平均匹配：${result.avg} 分</li></ul></div>` : ""}
+        <button class="btn primary" id="startLevelBtn" style="width:100%;margin-top:14px;">开始挑战</button>`;
+      $("startLevelBtn").addEventListener("click", startSelectedLevel);
+    }
+
+    function startSelectedLevel() {
+      state.yearIndex = state.selectedLevelIndex;
+      setScreen("play");
+      restart();
+    }
+
+    function returnToMap() {
+      setScreen("lobby");
+      renderLobby();
+    }
+
+    function byYearCountry(rows, year, country) {
+      return rows.find((r) => Number(r["年份"]) === year && r["国家"] === country) || {};
+    }
+
+    function factor(year, label) {
+      const row = state.data.factors.find((r) => Number(r["年份"]) === year && r["考虑因素"] === label);
+      return Number(row?.["占比"] || 0);
+    }
+
+    function baseWeights(year) {
+      const rank = factor(year, "学校排名");
+      const fee = factor(year, "学费");
+      const major = factor(year, "适合的专业");
+      const sum = rank + fee + major || 1;
+      return { rank: rank / sum, fee: fee / sum, major: major / sum };
+    }
+
+    function adjustedWeights(year, type) {
+      const w = baseWeights(year);
+      const d = type.delta;
+      const raw = {
+        rank: Math.max(0.05, w.rank + d.rank),
+        fee: Math.max(0.05, w.fee + d.fee),
+        major: Math.max(0.05, w.major + d.major),
+      };
+      const sum = raw.rank + raw.fee + raw.major;
+      return { rank: raw.rank / sum, fee: raw.fee / sum, major: raw.major / sum };
+    }
+
+    function weightedPick(items, getWeight) {
+      const total = items.reduce((sum, item) => sum + Math.max(0, getWeight(item)), 0);
+      if (!total) return items[0];
+      let r = Math.random() * total;
+      for (const item of items) {
+        r -= Math.max(0, getWeight(item));
+        if (r <= 0) return item;
+      }
+      return items[items.length - 1];
+    }
+
+    function buildCaseDeck() {
+      const year = currentYear();
+      const w = baseWeights(year);
+      const typeOrder = [...clientTypes].sort((a, b) => {
+        const score = (t) => t.id === "rank" ? w.rank : t.id === "fee" ? w.fee : t.id === "major" ? w.major : 0.2;
+        return score(b) - score(a);
+      });
+      const trendYear = year === 2016 ? 2017 : year;
+      const majorRows = state.data.majorTrend.filter((r) => Number(r["年份"]) === trendYear);
+      const majorOrder = [...majorRows]
+        .sort((a, b) => Number(b["占比"] || 0) - Number(a["占比"] || 0))
+        .map((r) => r["专业（统一口径后）"])
+        .filter(Boolean);
+      const storyTemplates = {
+        rank: [
+          `更看重学校平台和国际认可度，预算可以适度上浮。`,
+          `希望目的地有足够强的名校资源，申请结果要有说服力。`,
+          `家里最关心学校含金量，愿意为排名和声誉付出成本。`,
+          `目标是冲刺更高层次院校，其他条件可以为名校资源让步。`,
+        ],
+        fee: [
+          `预算边界比较明确，希望避免后续学费压力过高。`,
+          `希望方案稳妥可负担，不想因为成本影响留学计划。`,
+          `家庭更关注投入产出，倾向选择学费压力较低的目的地。`,
+          `需要控制总花费，希望推荐能兼顾性价比和可行性。`,
+        ],
+        major: [
+          `专业方向已经确定，希望目的地能提供更匹配的学习路径。`,
+          `更在意专业资源和未来发展，不想只因为热门就做选择。`,
+          `希望推荐围绕专业优势展开，院校和地区都要服务于方向。`,
+          `已经有明确学科兴趣，希望找到专业氛围更强的目的地。`,
+        ],
+        balanced: [
+          `希望名校、预算和专业都比较稳，不想在单一指标上冒险。`,
+          `更倾向综合方案，既要有学校资源，也要控制成本。`,
+          `希望推荐理由全面，不能只看热度或排名。`,
+          `需要一个整体风险较低的方案，兼顾申请、预算和专业适配。`,
+        ],
+      };
+      return Array.from({ length: state.casesPerRun }, (_, index) => {
+        const type = typeOrder[index % typeOrder.length];
+        const major = majorOrder[(index + state.yearIndex) % majorOrder.length] || state.data.majors[index % state.data.majors.length];
+        const name = names[(state.yearIndex * 3 + index) % names.length];
+        return {
+          name,
+          type,
+          major,
+          story: storyTemplates[type.id][(index + state.yearIndex) % storyTemplates[type.id].length],
+          weights: adjustedWeights(year, type),
+          avatarSeed: year + index * 17 + state.yearIndex * 11,
+        };
+      });
+    }
+
+    function makeClient() {
+      if (!state.caseDeck.length) state.caseDeck = buildCaseDeck();
+      const fallback = state.caseDeck[state.caseDeck.length - 1];
+      return state.caseDeck[state.caseInYear] || fallback;
+    }
+
+    function currentYear() {
+      return state.data.years[state.yearIndex];
+    }
+
+    function metricsFor(country) {
+      const year = currentYear();
+      const qsRows = state.data.qs100.filter((r) => Number(r["年份"]) === year);
+      const tuitionRows = state.data.tuition.filter((r) => Number(r["年份"]) === year);
+      const maxQs = Math.max(...qsRows.map((r) => Number(r["QS前100学校数量"] || 0)), 1);
+      const fees = tuitionRows.map((r) => Number(r["人民币中位估算/年"] || 0)).filter((v) => v > 0);
+      const minFee = Math.min(...fees);
+      const maxFee = Math.max(...fees);
+      const qs = Number(byYearCountry(state.data.qs100, year, country)["QS前100学校数量"] || 0);
+      const fee = Number(byYearCountry(state.data.tuition, year, country)["人民币中位估算/年"] || 0);
+      const rank = Number(byYearCountry(state.data.destinationRank, year, country)["排名"] || 10);
+      const majorRows = state.data.majorCountry.filter((r) => r["专业（统一口径后）"] === state.client.major);
+      const maxMajor = Math.max(...majorRows.map((r) => Number(r["占比"] || 0)), 1);
+      const majorVal = Number(majorRows.find((r) => r["国家"] === country)?.["占比"] || 0);
+      return {
+        country,
+        school: qs / maxQs * 100,
+        fee: maxFee === minFee ? 60 : (maxFee - fee) / (maxFee - minFee) * 100,
+        major: majorVal / maxMajor * 100,
+        popularity: (11 - rank) / 10 * 100,
+        rank,
+        qs,
+        feeRaw: fee,
+      };
+    }
+
+    function rawScore(m) {
+      const w = state.client.weights;
+      return m.school * w.rank + m.fee * w.fee + m.major * w.major;
+    }
+
+    function finalScore(m) {
+      const raw = rawScore(m);
+      const bestRaw = Math.max(...state.data.countries.map((country) => rawScore(metricsFor(country))), 1);
+      const relativeScore = raw / bestRaw * 100;
+      return clamp(relativeScore * 0.7 + raw * 0.3);
+    }
+
+    function grade(score) {
+      if (score >= 85) return { mark: "S", title: "高度匹配", rep: 12, sat: 15, color: "#0f766e" };
+      if (score >= 70) return { mark: "A", title: "推荐合理", rep: 8, sat: 10, color: "#2563eb" };
+      if (score >= 55) return { mark: "B", title: "有明显短板", rep: 3, sat: 3, color: "#c58a13" };
+      if (score >= 40) return { mark: "C", title: "勉强可行", rep: -4, sat: -5, color: "#d45d52" };
+      return { mark: "D", title: "推荐失败", rep: -10, sat: -12, color: "#9f1239" };
+    }
+
+    function labelScore(value, reverse = false) {
+      if (reverse) {
+        if (value >= 70) return ["低", "good"];
+        if (value >= 50) return ["中", "mid"];
+        return ["高", "bad"];
+      }
+      if (value >= 85) return ["强", "good"];
+      if (value >= 70) return ["较强", "good"];
+      if (value >= 50) return ["中", "mid"];
+      return ["弱", "bad"];
+    }
+
+    function avatarSvg(seed) {
+      const shirts = ["#1f3a5f", "#0f766e", "#d45d52", "#334155", "#7c3aed"];
+      const hair = ["#334155", "#172033", "#5b4636", "#1f2937"];
+      const bg = ["#dbeafe", "#ccfbf1", "#fef3c7", "#fde2e2", "#e9d5ff"];
+      const shirt = shirts[seed % shirts.length];
+      const hairColor = hair[(seed + 2) % hair.length];
+      const bgColor = bg[(seed + 4) % bg.length];
+      const smile = seed % 3 === 0 ? "M50 62c8 7 15 7 23 0" : seed % 3 === 1 ? "M51 62c7 3 14 3 21 0" : "M52 64c6-3 12-3 18 0";
+      const bang = seed % 2 === 0
+        ? `<path d="M34 45c4-24 21-33 35-29 17 5 24 15 21 31-18-9-34-10-56-2z" fill="${hairColor}"/>`
+        : `<path d="M37 43c8-21 25-29 39-18 11 8 14 17 9 30-13-12-30-15-48-12z" fill="${hairColor}"/>`;
+      return `
+        <svg viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="55" fill="${bgColor}"/>
+          <circle cx="60" cy="45" r="24" fill="#f4c7a1"/>
+          <path d="M23 106c6-25 24-39 37-39s31 14 37 39" fill="${shirt}"/>
+          ${bang}
+          <circle cx="51" cy="49" r="3" fill="#172033"/>
+          <circle cx="70" cy="49" r="3" fill="#172033"/>
+          <path d="${smile}" fill="none" stroke="#172033" stroke-width="3" stroke-linecap="round"/>
+        </svg>`;
+    }
+
+    function render() {
+      const year = currentYear();
+      $("yearTag").textContent = year;
+      $("caseTag").textContent = `第 ${state.caseInYear + 1}/${state.casesPerRun} 单`;
+      $("clientName").textContent = state.client.name;
+      $("clientAvatar").innerHTML = avatarSvg(state.client.avatarSeed);
+      $("clientStory").textContent = state.client.story;
+      $("clientType").textContent = state.client.type.label;
+      $("clientMajor").textContent = state.client.major;
+      $("clientBudget").textContent = state.client.type.budget;
+      const w = state.client.weights;
+      $("weightTag").textContent = `名校 ${fmt(w.rank * 100)} / 预算 ${fmt(w.fee * 100)} / 专业 ${fmt(w.major * 100)}`;
+      renderMetrics();
+      renderTimeline();
+      renderMission();
+      renderCountries();
+      renderLog();
+    }
+
+    function renderMetrics() {
+      const rate = state.totalCases ? Math.round(state.success / state.totalCases * 100) : 0;
+      $("rep").textContent = fmt(state.reputation);
+      $("sat").textContent = fmt(state.satisfaction);
+      $("rate").textContent = `${rate}%`;
+      $("energy").textContent = state.energy;
+      $("money").textContent = state.money;
+      $("insight").textContent = state.insight;
+      $("repBar").style.width = `${clamp(state.reputation)}%`;
+      $("satBar").style.width = `${clamp(state.satisfaction)}%`;
+      $("rateBar").style.width = `${rate}%`;
+      $("levelBar").style.width = `${state.energy / state.casesPerRun * 100}%`;
+      $("moneyBar").style.width = `${clamp(state.money, 0, 180) / 180 * 100}%`;
+      $("insightBar").style.width = `${clamp(state.insight, 0, 8) / 8 * 100}%`;
+    }
+
+    function renderTimeline() {
+      $("timeline").innerHTML = state.data.years.map((y, idx) => `<button class="year-dot ${idx === state.yearIndex ? "active" : ""}" data-year-index="${idx}">${String(y).slice(2)}</button>`).join("");
+      document.querySelectorAll(".year-dot").forEach((btn) => {
+        btn.addEventListener("click", () => switchYear(Number(btn.dataset.yearIndex)));
+      });
+    }
+
+    function renderMission() {
+      const year = currentYear();
+      const targetSuccess = 3;
+      const targetMoney = year >= 2023 ? 135 : 125;
+      const targetInsight = 3;
+      $("mission").innerHTML = `
+        <h3>${year} 年度挑战</h3>
+        <p>本年接待 ${state.casesPerRun} 位来访学生。完成咨询后结算年度口碑、资金和洞察表现。</p>
+        <div class="mission-list">
+          <div class="mission-item ${state.success >= targetSuccess ? "done" : ""}"><span>成功咨询</span><b>${state.success}/${targetSuccess}</b></div>
+          <div class="mission-item ${state.money >= targetMoney ? "done" : ""}"><span>资金达到</span><b>${state.money}/${targetMoney}</b></div>
+          <div class="mission-item ${state.insight >= targetInsight ? "done" : ""}"><span>洞察点</span><b>${state.insight}/${targetInsight}</b></div>
+        </div>`;
+    }
+
+    function renderCountries() {
+      const rows = state.data.countries.map(metricsFor).sort((a, b) => a.rank - b.rank);
+      const choicesLocked = state.awaitingNext || state.energy <= 0 || state.totalCases >= state.casesPerRun;
+      $("countryGrid").innerHTML = rows.map((m) => {
+        const school = labelScore(m.school);
+        const fee = labelScore(m.fee, true);
+        const major = labelScore(m.major);
+        return `
+          <button class="country-card ${state.selected === m.country ? "selected" : ""}" data-country="${m.country}" ${choicesLocked ? "disabled" : ""}>
+            <div class="country-head"><strong>${m.country}</strong><span class="rank-badge">热度 #${m.rank}</span></div>
+            <div class="clue"><span>QS资源</span><b class="pill ${school[1]}">${school[0]}</b></div>
+            <div class="clue"><span>学费压力</span><b class="pill ${fee[1]}">${fee[0]}</b></div>
+            <div class="clue"><span>专业匹配</span><b class="pill ${major[1]}">${major[0]}</b></div>
+          </button>`;
+      }).join("");
+      document.querySelectorAll(".country-card").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (btn.disabled) return;
+          state.selected = btn.dataset.country;
+          renderCountries();
+        });
+      });
+    }
+
+    function renderLog() {
+      $("log").innerHTML = state.logs.slice(0, 10).map((item) => `<div class="log-item">${item}</div>`).join("");
+    }
+
+    function rewardFor(score, m) {
+      const g = grade(score);
+      let money = 0;
+      let insight = 0;
+      let note = "";
+      if (g.mark === "S") {
+        money = 28;
+        insight = 2;
+        note = "精准方案，客户愿意支付高阶规划费。";
+      } else if (g.mark === "A") {
+        money = 20;
+        insight = 1;
+        note = "方案可信，成功转化为正式咨询。";
+      } else if (g.mark === "B") {
+        money = 8;
+        insight = 0;
+        note = "客户保留观望，只支付基础咨询费。";
+      } else if (g.mark === "C") {
+        money = -10;
+        insight = 0;
+        note = "方案短板明显，需要返工，损失时间成本。";
+      } else {
+        money = -22;
+        insight = 0;
+        note = "推荐失败，客户流失并影响口碑。";
+      }
+      if (m.popularity >= 80 && score < 70) {
+        money -= 8;
+        note += " 额外触发跟风惩罚：热门不等于适合。";
+      }
+      return { money, insight, note };
+    }
+
+    function renderFeedback(result) {
+      const feedback = $("feedback");
+      feedback.classList.remove("success", "fail");
+      if (!result) {
+        feedback.innerHTML = `<div class="empty">等待本轮推荐结果。</div>`;
+        return;
+      }
+      const { m, score, g, reward } = result;
+      const isSuccess = score >= 70;
+      const outcomeClass = isSuccess ? "success" : "fail";
+      const outcomeTitle = isSuccess ? "签约成功" : "客户流失";
+      const outcomeLine = isSuccess
+        ? `本单转化为正式咨询，${state.client.name} 接受了 ${m.country} 方案。`
+        : `${state.client.name} 暂缓申请，本单进入复盘。`;
+      const hotButWeak = m.popularity >= 80 && score < 70;
+      const quote = hotButWeak
+        ? `这个目的地确实很热门，但和我的核心需求还有距离。`
+        : score >= 70
+          ? `这个方案把我的重点考虑进去了，我愿意继续了解申请路径。`
+          : `我能理解这个选择，但它还没有解决我最担心的问题。`;
+      const rows = [
+        ["名校资源", m.school],
+        ["预算适配", m.fee],
+        ["专业匹配", m.major],
+        ["最终匹配", score],
+      ];
+      feedback.classList.add(outcomeClass);
+      feedback.innerHTML = `
+        <div class="outcome-banner ${outcomeClass}">
+          <b>${outcomeTitle}</b>
+          <span>${outcomeLine}</span>
+        </div>
+        <div class="grade">
+          <div class="grade-mark ${outcomeClass}" style="background:${g.color}">${g.mark}</div>
+          <div>
+            <h3>${g.title}：${m.country}</h3>
+            <p>“${quote}”</p>
+          </div>
+        </div>
+        <div class="score-list">
+          ${rows.map(([label, value]) => `
+            <div class="score-row">
+              <span>${label}</span>
+              <div class="score-track"><div class="score-fill" style="width:${clamp(value)}%"></div></div>
+              <b>${fmt(value)}</b>
+            </div>
+          `).join("")}
+        </div>
+        <div class="reward ${outcomeClass}">资金 ${reward.money >= 0 ? "+" : ""}${reward.money}｜洞察点 +${reward.insight}｜连胜 ${state.streak}<br>${reward.note}</div>`;
+    }
+
+    function triggerOutcomeEffect(isSuccess, g, reward) {
+      const cls = isSuccess ? "success" : "fail";
+      const bodyCls = isSuccess ? "outcome-success" : "outcome-fail";
+      const toast = $("resultToast");
+      toast.className = `result-toast ${cls}`;
+      toast.textContent = isSuccess
+        ? `签约成功！${g.mark} 级方案｜资金 +${Math.max(0, reward.money)}`
+        : `客户流失｜${g.mark} 级方案｜资金 ${reward.money}`;
+      document.body.classList.remove("outcome-success", "outcome-fail");
+      void document.body.offsetWidth;
+      document.body.classList.add(bodyCls);
+      toast.classList.add("show");
+      window.setTimeout(() => {
+        document.body.classList.remove(bodyCls);
+        toast.classList.remove("show");
+      }, 1250);
+    }
+
+    function submitPlan() {
+      if (state.awaitingNext) {
+        nextCase();
+        return;
+      }
+      if (state.energy <= 0) {
+        showReport();
+        return;
+      }
+      if (!state.selected) {
+        $("feedback").innerHTML = `<div class="empty">请选择一个目的地方案。</div>`;
+        return;
+      }
+      const m = metricsFor(state.selected);
+      const score = finalScore(m);
+      const g = grade(score);
+      const reward = rewardFor(score, m);
+      state.reputation = clamp(state.reputation + g.rep);
+      state.satisfaction = clamp(state.satisfaction + g.sat);
+      state.energy = Math.max(0, state.energy - 1);
+      state.money = Math.max(0, state.money + reward.money);
+      state.insight += reward.insight;
+      state.streak = score >= 70 ? state.streak + 1 : 0;
+      if (state.streak >= 2 && score >= 70) {
+        state.money += 6;
+        state.insight += 1;
+        reward.note += " 连续成功触发口碑转介绍奖励。";
+      }
+      state.totalCases += 1;
+      if (score >= 70) state.success += 1;
+      state.scores.push({ year: currentYear(), country: m.country, score, type: state.client.type.label, major: state.client.major, school: m.school, fee: m.fee, majorScore: m.major });
+      state.logs.unshift(`${currentYear()}｜${state.client.name}｜${state.client.type.label}｜${m.country}｜${g.mark} ${fmt(score)} 分｜资金 ${reward.money >= 0 ? "+" : ""}${reward.money}`);
+      renderFeedback({ m, score, g, reward });
+      triggerOutcomeEffect(score >= 70, g, reward);
+      renderMetrics();
+      renderMission();
+      state.awaitingNext = true;
+      $("nextBtn").textContent = state.energy <= 0 || state.totalCases >= state.casesPerRun ? "查看年度报告" : "下一位学生";
+    }
+
+    function nextCase() {
+      if (state.energy <= 0 || state.totalCases >= state.casesPerRun) {
+        showReport();
+        return;
+      }
+      state.caseInYear += 1;
+      state.selected = null;
+      state.awaitingNext = false;
+      state.client = makeClient();
+      $("nextBtn").textContent = "提交方案";
+      renderFeedback(null);
+      render();
+    }
+
+    function switchYear(index) {
+      state.selectedLevelIndex = index;
+      returnToMap();
+    }
+
+    function showReport() {
+      const avg = state.scores.reduce((s, r) => s + r.score, 0) / Math.max(1, state.scores.length);
+      const rate = state.totalCases ? Math.round(state.success / state.totalCases * 100) : 0;
+      const passedMoney = state.money >= (currentYear() >= 2023 ? 135 : 125);
+      const gradeValue = avg >= 85 && state.success >= 4 ? "S" : avg >= 75 && state.success >= 3 ? "A" : avg >= 60 || state.success >= 2 ? "B" : "C";
+      const title = gradeValue === "S" ? "年度明星顾问" : gradeValue === "A" ? "稳定增长顾问" : gradeValue === "B" ? "勉强达标顾问" : "经营受挫顾问";
+      const topCountry = mode(state.scores.map((r) => r.country));
+      const bestMajor = bestByAverage(state.scores, "major");
+      const persona = advisorPersona();
+      document.querySelector(".report-head h2").textContent = `${currentYear()} 年度挑战报告`;
+      $("reportSubtitle").textContent = `${gradeValue} 级通关｜${title}｜${persona}`;
+      state.levelResults[currentYear()] = {
+        grade: gradeValue,
+        avg: fmt(avg),
+        rate,
+        money: state.money,
+        insight: state.insight,
+        badge: gradeValue === "S" || state.insight >= 3,
+      };
+      const stats = [
+        ["通关评级", `${gradeValue}`],
+        ["累计服务", `${state.totalCases} 人`],
+        ["平均匹配", `${fmt(avg)} 分`],
+        ["咨询成功率", `${rate}%`],
+        ["最终口碑", `${fmt(state.reputation)}`],
+        ["年度资金", `${state.money}`],
+        ["洞察点", `${state.insight}`],
+        ["年度徽章", state.levelResults[currentYear()].badge ? levelMeta[currentYear()].reward : "未解锁"],
+        ["解锁图表", passedMoney ? levelMeta[currentYear()].chart : "待解锁"],
+      ];
+      $("reportGrid").innerHTML = stats.map(([k, v]) => `<div class="achievement"><span>${k}</span><b>${v}</b></div>`).join("");
+      drawReportChart();
+      $("report").classList.add("open");
+    }
+
+    function mode(items) {
+      const counts = {};
+      items.forEach((x) => counts[x] = (counts[x] || 0) + 1);
+      return Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || "-";
+    }
+
+    function bestByAverage(rows, key) {
+      const groups = {};
+      rows.forEach((r) => {
+        groups[r[key]] ??= [];
+        groups[r[key]].push(r.score);
+      });
+      return Object.entries(groups).map(([k, arr]) => [k, arr.reduce((a, b) => a + b, 0) / arr.length]).sort((a, b) => b[1] - a[1])[0]?.[0] || "-";
+    }
+
+    function advisorPersona() {
+      const sums = state.scores.reduce((acc, r) => {
+        acc.school += r.school;
+        acc.fee += r.fee;
+        acc.major += r.majorScore;
+        return acc;
+      }, { school: 0, fee: 0, major: 0 });
+      const top = Object.entries(sums).sort((a, b) => b[1] - a[1])[0]?.[0];
+      return top === "school" ? "名校策略型" : top === "fee" ? "预算规划型" : "专业匹配型";
+    }
+
+    function drawReportChart() {
+      const svg = $("reportChart");
+      const rows = state.scores.length ? state.scores : [{ score: 0, country: "-" }];
+      const points = rows.map((r, i) => {
+        const x = rows.length === 1 ? 450 : 40 + i * (820 / (rows.length - 1));
+        const yPos = 180 - r.score * 1.45;
+        return { x, y: yPos, score: r.score, label: `第${i + 1}单` };
+      });
+      const path = points.map((p, i) => `${i ? "L" : "M"} ${p.x} ${p.y}`).join(" ");
+      svg.innerHTML = `
+        <line x1="40" y1="180" x2="860" y2="180" stroke="#d9e2ec"/>
+        <line x1="40" y1="35" x2="40" y2="180" stroke="#d9e2ec"/>
+        <path d="${path}" fill="none" stroke="#0f766e" stroke-width="4" stroke-linecap="round"/>
+        ${points.map((p) => `<circle cx="${p.x}" cy="${p.y}" r="5" fill="#c58a13"/><text x="${p.x}" y="205" text-anchor="middle" font-size="12" fill="#667085">${p.label}</text>`).join("")}
+        <text x="42" y="24" font-size="14" font-weight="700" fill="#172033">本年每单匹配分</text>`;
+    }
+
+    function restart() {
+      state.caseInYear = 0;
+      state.totalCases = 0;
+      state.success = 0;
+      state.reputation = 50;
+      state.satisfaction = 50;
+      state.energy = state.casesPerRun;
+      state.money = 100;
+      state.insight = 0;
+      state.streak = 0;
+      state.selected = null;
+      state.awaitingNext = false;
+      state.caseDeck = buildCaseDeck();
+      state.logs = [];
+      state.scores = [];
+      state.client = makeClient();
+      $("nextBtn").textContent = "提交方案";
+      $("report").classList.remove("open");
+      renderFeedback(null);
+      render();
+    }
+
+    async function init() {
+      const res = await fetch("game-data.json?v=1");
+      state.data = await res.json();
+      $("nextBtn").addEventListener("click", submitPlan);
+      $("restartBtn").addEventListener("click", restart);
+      $("settleBtn").addEventListener("click", showReport);
+      $("mapBtn").addEventListener("click", returnToMap);
+      $("closeReport").addEventListener("click", () => {
+        $("report").classList.remove("open");
+        returnToMap();
+      });
+      setScreen("lobby");
+      renderLobby();
+    }
+
+    init().catch((err) => {
+      document.body.innerHTML = `<main class="panel" style="margin:40px auto;max-width:720px;"><h1>数据读取失败</h1><p>${err.message}</p></main>`;
+    });
+  </script>
+</body>
+</html>
